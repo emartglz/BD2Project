@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
+@login_required()
+def testing_auth(request):
+    return render(request, 'BD2Project/auth_test.html')
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")

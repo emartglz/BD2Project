@@ -1,134 +1,94 @@
 from django.db import models
 
-class EmpresaVendedora(models.Model):
+
+class Vacuna(models.Model):
+    nombre = models.CharField(max_length = 1000)
+    esquema_de_inmunizacion = models.CharField(max_length = 1000)
+    tipo_ganado = models.CharField(max_length = 100)
+
+    def __str__(self):
+        return self.nombre + ' ' + str(self.tipo_ganado) + ' ' + self.esquema_de_inmunizacion
+
+class Productor(models.Model):
     lugar = models.CharField(max_length = 1000)
     nombre = models.CharField(max_length = 1000)
 
     def __str__(self):
-        return self.lugar + ' ' + nombre
-
-
-class EmpresaCompradora(models.Model):
-    direccion = models.CharField(max_length = 1000)
-    nombre = models.CharField(max_length = 1000)
-    organismo_al_que_pertence = models.CharField(max_length = 1000)
-
-    def __str__(self):
-        return self.nombre + ' ' + direccion + ' ' + self.organismo_al_que_pertence;
-
-class Fecha(models.Model):
-    fecha = models.DateTimeField('fecha')
-
-    def __str__(self):
-        return str(self.fecha)
-
-class Comercializdora(models.Model):
-    empresa_vendedora = models.ForeignKey(EmpresaVendedora, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.empresa_vendedora)
-
-class Productor(models.Model):
-    empresa_vendedora = models.ForeignKey(EmpresaVendedora, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.empresa_vendedora)
-
-class Vacuna(models.Model):
-    precio_de_la_dosis = models.IntegerField(default=0)
-    nombre = models.CharField(max_length = 1000)
-    esquema_de_inmunizacion = models.CharField(max_length = 1000)
-
-    def __str__(self):
-        return self.nombre + ' ' + str(self.precio_de_la_dosis) + ' ' + self.esquema_de_inmunizacion
-
-class Produccion(models.Model):
-    productor = models.ForeignKey(Productor, on_delete=models.DO_NOTHING)
-    vacuna = models.ForeignKey(Vacuna, on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return str(self.productor) + ' ' + str(self.vacuna)
+        return self.nombre + ' ' + self.lugar
 
 class Producto(models.Model):
-    produccion = models.ForeignKey(Produccion, on_delete=models.DO_NOTHING)
-    fecha_de_produccion = models.DateTimeField('fecha de produccion')
-    fecha_de_caducidad = models.DateTimeField('fecha de caducidad')
-    dosis_por_bulbo = models.IntegerField(default = 0)
+    productor = models.ForeignKey(Productor, on_delete = models.CASCADE)
+    vacuna = models.ForeignKey(Vacuna, on_delete = models.CASCADE)
+    fecha_produccion = models.DateTimeField('Fecha de Produccion')
+    fecha_caducidad = models.DateTimeField('Fecha de Caducidad')
+    lote = models.IntegerField(default = 0)
+    dosis_bulbo = models.IntegerField(default = 0)
+    cantidad = models.IntegerField(default = 0)
 
     def __str__(self):
-        return str(self.produccion) + ' ' + str(self.fecha_de_produccion) + ' ' + str(self.fecha_de_caducidad) + ' ' + str(self.dosis_por_bulbo)
+        return self.productor + ' ' + self.vacuna + ' ' + str(self.lote)
 
-class Pedido(models.Model):
-    empresa_vendedora = models.ForeignKey(EmpresaVendedora, on_delete=models.DO_NOTHING)
-    empresa_compradora = models.ForeignKey(EmpresaCompradora, on_delete=models.DO_NOTHING)
-    producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
-    fecha = models.ForeignKey(Fecha, on_delete=models.DO_NOTHING)
 
-    def __str__(self):
-        return str(self.producto) + ' ' + str(self.empresa_vendedora) + ' ' + str(self.empresa_compradora) + ' ' + str(self.fecha)
-
-class ProductoComprado(models.Model):
-    pedido = models.ForeignKey(Pedido, on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return str(self.pedido)
-
-class Entrega(models.Model):
-    fecha = models.ForeignKey(Fecha, on_delete=models.DO_NOTHING)
-    cantidad_entregada = models.IntegerField(default=0)
-    empresa_compradora = models.ForeignKey(EmpresaCompradora, on_delete=models.DO_NOTHING)
-    empresa_vendedora = models.ForeignKey(EmpresaVendedora, on_delete=models.DO_NOTHING)
-    producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return str(self.producto) + ' ' + str(self.empresa_vendedora) + ' ' + str(self.empresa_compradora) + ' ' + str(self.fecha) + ' ' + str(self.cantidad_entregada)
-
-class Ganado(models.Model):
-    tipo_de_ganado = models.CharField(max_length = 1000)
-    vacuna_que_se_le_aplica = models.CharField(max_length = 1000)
-
-    def __str__(self):
-        return self.tipo_de_ganado + ' ' + self.vacuna_que_se_le_aplica
-
-class Cria(models.Model):
-    empresa_compradora = models.ForeignKey(EmpresaCompradora, on_delete=models.DO_NOTHING)
-    ganado = models.ForeignKey(Ganado, on_delete=models.DO_NOTHING)
-
-    def __str__(self):
-        return str(self.ganado) + ' ' + str(self.empresa_compradora)
-
-class Veterinario(models.Model):
-    empresa_compradora = models.ForeignKey(EmpresaCompradora, on_delete=models.DO_NOTHING)
-    nombre = models.CharField(max_length = 1000)
-    ci = models.IntegerField(default=0)
-    experiencia_laboral = models.CharField(max_length = 1000)
-
-    def __str__(self):
-        return self.nombre + ' ' + str(self.ci) + ' ' + str(self.empresa_compradora) + ' ' + self.experiencia_laboral
-
-class Animal(models.Model):
-    ganado = models.ForeignKey(Ganado, on_delete=models.DO_NOTHING)
+class Sectores_Unidades(models.Model):
+    provincia = models.CharField(max_length = 100)
     nombre = models.CharField(max_length = 1000)
 
-    def __str__(self):
-        return self.nombre + ' ' + str(self.ganado)
+    def __str__():
+        return self.nombre + ' ' + self.provincia
+
+
+
+class ComercialNacional(models.Model):
+    lugar = models.CharField(max_length = 100)
+    nombre = models.CharField(max_length = 1000)
+
+    def __str__():
+        return self.nombre
+
+
+class ProductoComercial(models.Model):
+    producto = models.ForeignKey(Producto, on_delete = models.CASCADE)
+    comercializadora = models.ForeignKey(ComercialNacional, on_delete = models.CASCADE)
+    cantidad = models.IntegerField(default = 0)
+    fecha = models.DateTimeField('fecha de distribucion')
+
+    def __str__():
+        return self.comercializadora + ' ' + self.producto + ' ' + str(self.fecha) + ' ' + str(self.cantidad)
+
+class ComercialProvincial(models.Model):
+    provincia = models.CharField(max_length = 100)
+    nombre = models.CharField(max_length = 1000)
+
+    def __str__():
+        return self.nombre + ' ' + self.provincia
+
+class DistribucionComercializadoras(models.Model):
+    c_nacional = models.ForeignKey(ComercialNacional, on_delete = models.CASCADE)
+    c_provincial = models.ForeignKey(ComercialProvincial, on_delete = models.CASCADE)
+    producto = models.ForeignKey(ProductoComercial, on_delete = models.CASCADE)
+    fecha = models.DateTimeField('fecha de venta entre comercializadoras')
+    cantidad = models.IntegerField(default = 0)
+
+    def __str__():
+        return  self.c_nacional + ' ' + self.c_provincial + ' ' + self.producto + ' ' + str(self.fecha) + ' ' + str(self.cantidad)
+
+
+class VentaSectores(models.Model):
+    c_provincial = models.ForeignKey(ComercialProvincial, on_delete = models.CASCADE)
+    sector_unidad = models.ForeignKey(Sectores_Unidades, on_delete = models.CASCADE)
+    producto = models.ForeignKey(DistribucionComercializadoras, on_delete = models.CASCADE)
+    fecha = models.DateTimeField('fecha de venta a sectores')
+    cantidad = models.IntegerField(default = 0)
+
+    def __str__():
+        return self.c_provincial + ' ' + self.sector_unidad + ' ' + self.producto + ' ' + str(self.fecha) + ' ' + str(self.cantidad)
 
 class AplicacionDeVacuna(models.Model):
-    veterinario = models.ForeignKey(Veterinario, on_delete=models.DO_NOTHING)
-    animal = models.ForeignKey(Animal, on_delete=models.DO_NOTHING)
-    producto_comprado = models.ForeignKey(ProductoComprado, on_delete=models.DO_NOTHING)
-    fecha = models.ForeignKey(Fecha, on_delete=models.DO_NOTHING)
-    dosis_aplicada = models.IntegerField(default=0)
+    sector_unidad = models.ForeignKey(Sectores_Unidades, on_delete = models.CASCADE)
+    producto = models.ForeignKey(VentaSectores, on_delete = models.CASCADE)
+    fecha = models.DateTimeField('fecha de aplicacion de vacuna')
+    cantidad = models.IntegerField(default = 0)
 
-    def __str__(self):
-        return str(self.veterinario) + ' ' + str(self.animal) + ' ' + str(self.producto_comprado) + ' ' + str(self.fecha) + ' ' + str(self.dosis_aplicada)
+    def __str__():
+        return self.sector_unidad + ' ' + self.producto + ' ' + str(self.fecha) + ' ' + str(self.cantidad)
 
-# class Question(models.Model):
-#     question_text = models.CharField(max_length=200)
-#     pub_date = models.DateTimeField('date published')
-
-
-# class Choice(models.Model):
-#     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-#     choice_text = models.CharField(max_length=200)
-#     votes = models.IntegerField(default=0)

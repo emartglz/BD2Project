@@ -3,8 +3,11 @@
 {% block title%}Home{% endblock %}
 
 {% block content %}
+
+Home
+
 {% if user.is_authenticated %}
-    Hi {{user.username}}!
+    <p> Hi {{user.username}}! </p>
     <form class="logout-link" action="{% url 'Accounts:logout' %}" method="post">
         {% csrf_token %}
         <button type="submit">Logout</button>

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-@login_required()
+@login_required(login_url="/Accounts/login")
 def testing_auth(request):
     return render(request, 'BD2Project/auth_test.html')
 

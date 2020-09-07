@@ -5,13 +5,13 @@
 {% block content %}
 {% if user.is_authenticated %}
     Hi {{user.username}}!
-    <form class="logout-link" action="{% url 'accounts:logout' %}" method="post">
+    <form class="logout-link" action="{% url 'Accounts:logout' %}" method="post">
         {% csrf_token %}
         <button type="submit">Logout</button>
     </form>
-    {% comment %} <p><a href="{% url 'accounts:logout' %}">logout</a></p> {% endcomment %}
+    {% comment %} <p><a href="{% url 'Accounts:logout' %}">logout</a></p> {% endcomment %}
 {% else %}
     <p>You are not logged in</p>
-    <a href="{% url 'accounts:login' %}">login</a>
+    <a href="{% url 'Accounts:login' %}">login</a>
 {% endif %}
 {% endblock %}

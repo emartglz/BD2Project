@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+    - 3306:3306
+    
+  adminer:
+    image: adminer
+    ports:
+    - 8080:8080
+
+  # web:
+  #   image: 
+  #   volumes:
+  #   - .:/app
+  #   working_dir: /app
+  #   command: ./entrypoint.sh

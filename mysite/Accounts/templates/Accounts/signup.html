@@ -1,14 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'admin/base_site.html' %}
+{% load i18n admin_urls %}
 
 {% block title%}Sign Up{% endblock %}
 
-
 {% block content %}
+<div id="content-main">
 <h2>Sign Up</h2>
 <form class="site-form" action="/Accounts/signup/" method="post">
     {{ form }}
     {% csrf_token %}
     <input type="submit" value="Signup">
-    <!-- <button type="submit">Sign Up</button> -->
 </form>
+</div>
 {% endblock %}
